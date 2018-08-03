@@ -21,15 +21,15 @@ from com.mibc.utils.py_excel import saveStartAppResult,saveCpuResult
 class Application(tk.Tk):
     global packagename
 
-    def __init__(self,devices):
+    def __init__(self):
         '''初始化'''
         super().__init__()  # 有点相当于tk.Tk()
         self.__running = True
-        self.devices_list = devices
+        # self.devices_list = devices
 
         # 获取设备状态
         # self.devices_status = getDevicesStatus()
-        # self.devices_list = getdevices_list()
+        self.devices_list = getdevices_list()
 
 
         self.create_panel_frame()
@@ -41,6 +41,10 @@ class Application(tk.Tk):
 
     def create_panel_frame(self):
         '''布局'''
+
+        package_3 = packagelist_3()
+        # package_s = packagelist_system()
+
         self.entryvar = tk.StringVar() #变量
         framebar = tk.Frame(self,height=80)
         framebar.pack(side=TOP)
@@ -71,6 +75,12 @@ class Application(tk.Tk):
         self.devcies_combobox.current(0)
         self.devcies_combobox.grid(row=1, column=4, sticky=W)
 
+        self.package3_box = ttk.Combobox(framebar, values=package_3)
+        self.package3_box.current(0)
+        self.package3_box.grid(row=1, column=5, sticky=W)
+        self.package3_box.bind('<<ComboboxSelected>>',self.go)
+
+
         self.data_text = ScrolledText(self.frame_bottom)
         self.data_text.pack(fill=BOTH, expand=1)
 
@@ -84,6 +94,8 @@ class Application(tk.Tk):
         pwindow.add(self.frame_top)
         pwindow.add(self.frame_bottom)
 
+    def go(self,*args):
+        messagebox.showinfo("提示",self.package3_box.get())
 
     def __create_cpu_widget(self):
         '''创建cpu控件'''
@@ -654,20 +666,15 @@ class Application(tk.Tk):
 
 
 if __name__ == '__main__':
+    app = Application()
+    app.title("测试工具")
+    tmp = open("tmp.ico", "wb+")
+    tmp.write(base64.b64decode(img))
+    tmp.close()
 
-    devices = getdevices_list()
-    if len(devices) > 0 :
-        app = Application(devices=devices)
-        app.title("测试工具")
-        tmp = open("tmp.ico", "wb+")
-        tmp.write(base64.b64decode(img))
-        tmp.close()
+    app.iconbitmap('tmp.ico')
 
-        app.iconbitmap('tmp.ico')
-
-        app.mainloop()
-        os.remove("tmp.ico")
-    else:
-        messagebox.showinfo('警告', '请先连接手机')
+    app.mainloop()
+    os.remove("tmp.ico")
 
 
