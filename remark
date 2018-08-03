@@ -1,0 +1,42 @@
+#打包成单个执行文件
+pyinstaller -F *.py
+
+pyinstaller -F -W *.py
+
+pyinstaller -F -i G:\PythonWorkspace\AndroidTools\com\image\mainico.ico application.py
+pyinstaller -F -i G:\PythonWorkspace\AndroidTools\com\icon1.ico application.py
+
+常用参数说明：
+-F 打包成一个exe文件
+-w 使用窗口，无控制台
+-c 使用控制台，无窗口
+-D 创建一个目录，里面包含exe以及其他一些依赖性文件(默认是这个)
+-K, --tk 包含TCL/TK
+-d, --debug 生成debug模式的exe文件
+-X, --upx 使用upx压缩exe文件
+-o DIR, --out=DIR 设置spec文件输出的目录，默认在PyInstaller同目录
+--icon=FILE.ICO  加入图标（Windows Only）
+-v FILE, --version=FILE 加入版本信息文件
+
+pyinstaller -h 来查看参数
+
+#加入图片处理,将图片ico转换成py文件
+import base64
+open_icon = open("icon1.ico","rb")
+b64str = base64.b64encode(open_icon.read())
+open_icon.close()
+write_data = "img = '%s'" % b64str.decode()
+f = open("icon.py","w+")
+f.write(write_data)
+f.close()
+
+引用
+app = Application()
+app.title("测试工具")
+tmp = open("tmp.ico","wb+")
+tmp.write(base64.b64decode(img))
+tmp.close()
+app.iconbitmap('tmp.ico')
+app.mainloop()
+os.remove("tmp.ico")
+
